@@ -3,15 +3,6 @@
 
 @implementation FlutterAppnextAd;
 
-- (id)initWithPlugin:(FlutterAppnextPlugin*)plugin instanceID:(NSNumber*)instanceID {
-  self = [super init];
-  if (!self) return nil;
-
-  _plugin = plugin;
-  _instanceID = instanceID;
-  return self;
-}
-
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
   if ([@"loadAd" isEqualToString:call.method]) {
     [self.appnextAd loadAd];
@@ -46,7 +37,7 @@
     [self.appnextAd setClickInApp:newValue.boolValue];
     return result(nil);
   }
-  result(FlutterMethodNotImplemented);
+  [super handleMethodCall:call result:result];
 }
 
 #pragma mark AppnextAdDelegate

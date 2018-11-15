@@ -38,7 +38,7 @@
     return;
   }
 
-  FlutterAppnextAd* instance = _instances[instanceID];
+  FlutterAppnextBridge* instance = _instances[instanceID];
   if (!instance) {
     if ([@"interestitial.init" isEqualToString:call.method]) {
       instance = [[FlutterAppnextInterestitialAd alloc] initWithPlugin:self instanceID:instanceID];

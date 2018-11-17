@@ -4,17 +4,19 @@
 
 @implementation FlutterAppnextBridge;
 
-- (id)initWithPlugin:(FlutterAppnextPlugin*)plugin instanceID:(NSNumber*)instanceID {
+- (id)initWithInstanceID:(NSNumber*)instanceID {
   self = [super init];
   if (!self) return nil;
   
-  _plugin = plugin;
   _instanceID = instanceID;
   return self;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
   if ([@"dispose" isEqualToString:call.method]) {
+    if (_eventSink != nil) {
+      _eventSink(FlutterEndOfEventStream);
+    }
     return result(nil);
   }
   result(FlutterMethodNotImplemented);

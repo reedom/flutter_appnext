@@ -23,7 +23,7 @@ abstract class ANAd extends ANAppnextPlugin {
   String get initMethod;
 
   ANAd({String placementID, ANAdConfiguration adConfiguration}) {
-    channel.invokeMethod(initMethod, <String, dynamic>{
+    final arg = <String, dynamic>{
       'instanceID': this.hashCode,
       'placementID': placementID,
       'categories': adConfiguration != null ? adConfiguration.categories : null,
@@ -32,7 +32,9 @@ abstract class ANAd extends ANAppnextPlugin {
       'preferredOrientation':
           adConfiguration != null ? preferredOrientationToString(adConfiguration.preferredOrientation) : null,
       'clickInApp': adConfiguration != null ? adConfiguration.clickInApp : null,
-    });
+    };
+    channel.invokeMethod(initMethod, arg);
+    eventChannel.receiveBroadcastStream(arg).listen(onEvent, onError: onError, onDone: onDone);
   }
 
   Future<String> get placementID async {

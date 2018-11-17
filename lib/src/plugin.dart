@@ -12,16 +12,9 @@ abstract class ANAppnextPlugin {
 
   bool get disposed => _disposed;
 
-  @override
   MethodChannel get channel => _channel;
 
-  @override
   StreamsChannel get eventChannel => _eventChannel;
-
-  ANAppnextPlugin() {
-    final arg = <String, dynamic>{'instanceID': this.hashCode};
-    eventChannel.receiveBroadcastStream(arg).listen(onEvent, onError: onError, onDone: onDone);
-  }
 
   Future<void> dispose() async {
     if (!_disposed) {

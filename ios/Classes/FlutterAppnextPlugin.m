@@ -9,10 +9,9 @@
 @end
 
 @implementation FlutterAppnextPlugin {
-  NSMutableDictionary* _methodHandlers;
 }
 
-static NSMutableDictionary* streamsHandlers;
+static NSMutableDictionary* _methodHandlers;
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel = [FlutterMethodChannel
@@ -20,8 +19,6 @@ static NSMutableDictionary* streamsHandlers;
             binaryMessenger:[registrar messenger]];
   FlutterAppnextPlugin* instance = [[FlutterAppnextPlugin alloc] init];
   [registrar addMethodCallDelegate:instance channel:channel];
-
-  streamsHandlers = [NSMutableDictionary new];
 
   FlutterStreamsChannel *eventChannel = [FlutterStreamsChannel
                                          streamsChannelWithName:@"com.reedom.flutter_appnext/event"
@@ -52,9 +49,9 @@ static NSMutableDictionary* streamsHandlers;
   FlutterAppnextBridge* instance = _methodHandlers[instanceID];
   if (!instance) {
     if ([@"banner.init" isEqualToString:call.method]) {
-      instance = [[FlutterAppnextBannerAd alloc] initWithPlugin:self instanceID:instanceID];
+      instance = [[FlutterAppnextBannerAd alloc] initWithInstanceID:instanceID];
     } else if ([@"interestitial.init" isEqualToString:call.method]) {
-      instance = [[FlutterAppnextInterestitialAd alloc] initWithPlugin:self instanceID:instanceID];
+      instance = [[FlutterAppnextInterestitialAd alloc] initWithInstanceID:instanceID];
     }
     if (instance) {
       _methodHandlers[instanceID] = instance;
@@ -72,42 +69,12 @@ static NSMutableDictionary* streamsHandlers;
   if (instance) {
     [instance handleMethodCall:call result:result];
     if ([@"dispose" isEqualToString:call.method]) {
-      [self close:instanceID];
+      [_methodHandlers removeObjectForKey:instanceID];
     }
     return;
   }
 
   result(FlutterMethodNotImplemented);
-}
-
-- (void)invokeEvent:(id)arguments {
-  NSNumber* instanceID = _GET_INSTANCE_ID(arguments);
-  if (!instanceID) {
-    NSLog(@"invokeEvent: instance ID is required");
-    return;
-  }
-  
-  FlutterEventSink eventSink = streamsHandlers[instanceID];
-  if (!eventSink) {
-    NSLog(@"event sink is not found");
-    return;
-  }
-  if (arguments[@"event"] == FlutterEndOfEventStream) {
-    eventSink(FlutterEndOfEventStream);
-  } else {
-    eventSink(arguments);
-  }
-}
-
-- (void)close:(NSNumber*)instanceID {
-  FlutterEventSink eventSink = streamsHandlers[instanceID];
-  if (!eventSink) {
-    NSLog(@"event sink is not found");
-    return;
-  }
-  eventSink(FlutterEndOfEventStream);
-  [streamsHandlers removeObjectForKey:instanceID];
-  [_methodHandlers removeObjectForKey:instanceID];
 }
 
 @end
@@ -128,12 +95,24 @@ static NSMutableDictionary* streamsHandlers;
                                message:@"instanceID is not specified"
                                details:nil];
   }
-  streamsHandlers[instanceID] = eventSink;
+
+  FlutterAppnextBridge* instance = _methodHandlers[instanceID];
+  if (!instance) {
+    return [FlutterError errorWithCode:@"UNEXPECTED"
+                               message:@"instance not found"
+                               details:nil];
+  }
+
+  instance.eventSink = eventSink;
   return nil;
 }
 
 - (FlutterError* _Nullable)onCancelWithArguments:(id _Nullable)arguments {
   NSLog(@"onCancelWithArguments %@", arguments);
+  NSNumber* instanceID = _GET_INSTANCE_ID(arguments);
+  if (instanceID) {
+    [_methodHandlers removeObjectForKey:instanceID];
+  }
   return nil;
 }
 

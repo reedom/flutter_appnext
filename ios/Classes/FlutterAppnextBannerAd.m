@@ -84,7 +84,6 @@
 #else
   [self placeBannerPreIos11];
 #endif
-  NSLog(@"banner rect: %@", NSStringFromCGRect(_bannerView.frame));
 }
 
 - (void)destoyBanner {
@@ -121,23 +120,27 @@
 #pragma mark AppnextBannerDelegate
 
 - (void) onAppnextBannerLoadedSuccessfully {
-  NSLog(@"onAppnextBannerLoadedSuccessfully");
-  [self.plugin invokeEvent:@{@"instanceID": self.instanceID, @"event": @"onAppnextBannerLoadedSuccessfully"}];
+  if (self.eventSink) {
+    self.eventSink(@{@"instanceID": self.instanceID, @"event": @"onAppnextBannerLoadedSuccessfully"});
+  }
 }
 
 - (void) onAppnextBannerError:(AppnextError) error {
-  NSLog(@"onAppnextBannerError: %ld", error);
-  [self.plugin invokeEvent:@{@"instanceID": self.instanceID, @"event": @"onAppnextBannerError", @"error": [NSNumber numberWithInt:error]}];
+  if (self.eventSink) {
+    self.eventSink(@{@"instanceID": self.instanceID, @"event": @"onAppnextBannerError", @"error": [NSNumber numberWithInt:error]});
+  }
 }
 
 - (void) onAppnextBannerClicked {
-  NSLog(@"onAppnextBannerClicked");
-  [self.plugin invokeEvent:@{@"instanceID": self.instanceID, @"event": @"onAppnextBannerClicked"}];
+  if (self.eventSink) {
+    self.eventSink(@{@"instanceID": self.instanceID, @"event": @"onAppnextBannerClicked"});
+  }
 }
 
 - (void) onAppnextBannerImpressionReported {
-  NSLog(@"onAppnextBannerImpressionReported");
-  [self.plugin invokeEvent:@{@"instanceID": self.instanceID, @"event": @"onAppnextBannerImpressionReported"}];
+  if (self.eventSink) {
+    self.eventSink(@{@"instanceID": self.instanceID, @"event": @"onAppnextBannerImpressionReported"});
+  }
 }
 
 @end

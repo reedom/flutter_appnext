@@ -4,9 +4,9 @@
 
 @interface FlutterAppnextBridge : NSObject
 
-@property (nonatomic, weak, readonly) FlutterAppnextPlugin* plugin;
 @property (nonatomic, strong, readonly) NSNumber* instanceID;
+@property (nonatomic, weak) FlutterEventSink eventSink;
 
-- (id)initWithPlugin:(FlutterAppnextPlugin*)plugin instanceID:(NSNumber*)instanceID;
+- (id)initWithInstanceID:(NSNumber*)instanceID;
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result;
 @end

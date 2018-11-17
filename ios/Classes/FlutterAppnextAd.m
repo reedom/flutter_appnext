@@ -44,29 +44,40 @@
 
 - (void) adLoaded:(AppnextAd *)ad
 {
-  NSLog(@"adLoaded: %d", self.instanceID.intValue);
-  [self.plugin invokeEvent:@{@"instanceID": self.instanceID, @"event": @"adLoaded"}];
+  if (self.eventSink) {
+    self.eventSink(@{@"instanceID": self.instanceID, @"event": @"adLoaded"});
+  }
 }
 
 - (void) adOpened:(AppnextAd *)ad
 {
-  [self.plugin invokeEvent:@{@"instanceID": self.instanceID, @"event": @"adOpened"}];
+  if (self.eventSink) {
+    self.eventSink(@{@"instanceID": self.instanceID, @"event": @"adOpened"});
+  }
 }
 
 - (void) adClosed:(AppnextAd *)ad {
-  [self.plugin invokeEvent:@{@"instanceID": self.instanceID, @"event": @"adClosed"}];
+  if (self.eventSink) {
+    self.eventSink(@{@"instanceID": self.instanceID, @"event": @"adClosed"});
+  }
 }
 
 - (void) adClicked:(AppnextAd *)ad {
-  [self.plugin invokeEvent:@{@"instanceID": self.instanceID, @"event": @"adClicked"}];
+  if (self.eventSink) {
+    self.eventSink(@{@"instanceID": self.instanceID, @"event": @"adClicked"});
+  }
 }
 
 - (void) adUserWillLeaveApplication:(AppnextAd *)ad {
-  [self.plugin invokeEvent:@{@"instanceID": self.instanceID, @"event": @"adUserWillLeaveApplication"}];
+  if (self.eventSink) {
+    self.eventSink(@{@"instanceID": self.instanceID, @"event": @"adUserWillLeaveApplication"});
+  }
 }
 
 - (void) adError:(AppnextAd *)ad error:(NSString *)error {
-  [self.plugin invokeEvent:@{@"instanceID": self.instanceID, @"event": @"adError", @"error": error}];
+  if (self.eventSink) {
+    self.eventSink(@{@"instanceID": self.instanceID, @"event": @"adError", @"error": error});
+  }
 }
 
 @end

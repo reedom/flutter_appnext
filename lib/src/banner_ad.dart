@@ -31,7 +31,7 @@ class ANBannerAd extends ANAppnextPlugin {
     this.adClicked,
     this.adError,
   }) {
-    channel.invokeMethod('banner.init', <String, dynamic>{
+    final arg = <String, dynamic>{
       'instanceID': hashCode,
       'placementID': placementID,
       'categories': categories,
@@ -45,7 +45,9 @@ class ANBannerAd extends ANAppnextPlugin {
       'minVideoLength': minVideoLength,
       'clickInApp': clickInApp,
       'bannerType': bannerTypeToInt(bannerType),
-    });
+    };
+    channel.invokeMethod('banner.init', arg);
+    eventChannel.receiveBroadcastStream(arg).listen(onEvent, onError: onError, onDone: onDone);
   }
 
   Future<void> loadAd() async {

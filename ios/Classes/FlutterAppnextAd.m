@@ -44,6 +44,7 @@
 
 - (void) adLoaded:(AppnextAd *)ad
 {
+  NSLog(@"adLoaded: %d", self.instanceID.intValue);
   [self.plugin invokeEvent:@{@"instanceID": self.instanceID, @"event": @"adLoaded"}];
 }
 

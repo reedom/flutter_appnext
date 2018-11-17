@@ -14,6 +14,9 @@
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
+  if ([@"dispose" isEqualToString:call.method]) {
+    return result(nil);
+  }
   result(FlutterMethodNotImplemented);
 }
 

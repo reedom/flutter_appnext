@@ -9,16 +9,29 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  static const placementID = 'b5c36d44-60b0-44e0-b489-683782e0ae2b';
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  ANBannerAd _bannerAd;
   ANInterstitialAd _interstitialAd;
   String _log = '';
 
   @override
   void initState() {
     super.initState();
+
+    _bannerAd = ANBannerAd(
+      placementID: placementID,
+      adLoaded: (_) => log('banner loaded'),
+      adOpened: (_) => log('banner opened'),
+      adClicked: (_) => log('banner clicked'),
+      adImpressionReported: (_) => log('banner clicked'),
+      adError: (err) => showInSnackBar('banner error: ${err.error}'),
+    );
+
     final adConfiguration = ANAdConfiguration(postback: 'qaTest');
     _interstitialAd = ANInterstitialAd(
-      placementID: 'b5c36d44-60b0-44e0-b489-683782e0ae2b',
+      placementID: placementID,
       adConfiguration: adConfiguration,
       adLoaded: (_) => log('interestitial loaded'),
       adOpened: (_) => log('interestitial opened'),
@@ -38,22 +51,40 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Row(
+          child: Column(
             children: <Widget>[
-              Expanded(
-                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  RaisedButton(onPressed: _descInterstitial, child: Text('Describe Interstitial')),
-                  RaisedButton(onPressed: _loadInterstitial, child: Text('Load Interstitial')),
-                  RaisedButton(onPressed: _showInterstitial, child: Text('Show Interstitial')),
-                  RaisedButton(onPressed: _setInterstitialProps, child: Text('Set Interstitial props')),
-                  RaisedButton(onPressed: _disposeInterstitial, child: Text('Dispose Interstitial')),
+              Row(
+                children: <Widget>[
                   Expanded(
-                    child: Text(
-                      _log,
-                      maxLines: null,
-                    ),
+                    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      RaisedButton(onPressed: () => _bannerAd.loadAd(), child: Text('Load Banner')),
+                      RaisedButton(onPressed: () => _bannerAd.showBanner(), child: Text('Show Banner')),
+                      RaisedButton(onPressed: () => _bannerAd.hideBanner(), child: Text('Hide Banner')),
+                      RaisedButton(onPressed: () => _changeBanner(ANBannerType.Small), child: Text('Small Banner')),
+                      RaisedButton(onPressed: () => _changeBanner(ANBannerType.Large), child: Text('Large Banner')),
+                      RaisedButton(
+                          onPressed: () => _changeBanner(ANBannerType.MediumRectangle),
+                          child: Text('Rectangle Banner')),
+                      RaisedButton(onPressed: () => _setBannerProps(), child: Text('Set Banner props')),
+                      RaisedButton(onPressed: () => _bannerAd.dispose(), child: Text('Dispose Banner')),
+                    ]),
                   ),
-                ]),
+                  Expanded(
+                    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      RaisedButton(onPressed: () => _descInterstitial(), child: Text('Describe Interstitial')),
+                      RaisedButton(onPressed: () => _interstitialAd.loadAd(), child: Text('Load Interstitial')),
+                      RaisedButton(onPressed: () => _interstitialAd.showAd(), child: Text('Show Interstitial')),
+                      RaisedButton(onPressed: () => _setInterstitialProps(), child: Text('Set Interstitial props')),
+                      RaisedButton(onPressed: () => _interstitialAd.dispose(), child: Text('Dispose Interstitial')),
+                    ]),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Text(
+                  _log,
+                  maxLines: null,
+                ),
               ),
             ],
           ),
@@ -84,14 +115,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void _loadInterstitial() async {
-    _interstitialAd.loadAd();
-  }
-
-  void _showInterstitial() {
-    _interstitialAd.showAd();
-  }
-
   void log(String message) {
     setState(() => _log += '$message\n');
   }
@@ -111,7 +134,19 @@ class _MyAppState extends State<MyApp> {
     _descInterstitial();
   }
 
-  void _disposeInterstitial() {
-    _interstitialAd.dispose();
+  void _setBannerProps() {}
+
+  void _changeBanner(ANBannerType bannerType) {
+    _bannerAd.dispose();
+
+    _bannerAd = ANBannerAd(
+      placementID: placementID,
+      bannerType: bannerType,
+      adLoaded: (_) => log('banner loaded'),
+      adOpened: (_) => log('banner opened'),
+      adClicked: (_) => log('banner clicked'),
+      adImpressionReported: (_) => log('banner adImpressionReported'),
+      adError: (err) => showInSnackBar('banner error: ${err.error}'),
+    );
   }
 }

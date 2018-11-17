@@ -1,7 +1,7 @@
 name: flutter_appnext
 description: Flutter Appnext support
 version: 0.0.1
-author:
+author: HANAI, Tohru <tohru@reedom.com>
 homepage:
 
 environment:
@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  streams_channel: ^0.2.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

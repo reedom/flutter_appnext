@@ -1,14 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_appnext/src/ad.dart';
 import 'package:flutter_appnext/src/types.dart';
 
 class ANInterstitialAd extends ANAd {
-  static const MethodChannel _channel = const MethodChannel('flutter_appnext_interstitial');
-  static const EventChannel _eventChannel = const EventChannel('flutter_appnext_interstitial/event');
-
   @override
   String get initMethod => 'interestitial.init';
 
@@ -29,42 +25,36 @@ class ANInterstitialAd extends ANAd {
     this.adError,
   }) : super(placementID: placementID, adConfiguration: adConfiguration);
 
-  @override
-  MethodChannel get channel => _channel;
-
-  @override
-  EventChannel get eventChannel => _eventChannel;
-
   Future<ANCreativeType> getCreativeType() async {
-    final value = await _channel.invokeMethod('getCreativeType', <String, dynamic>{'instanceID': this.hashCode});
+    final value = await channel.invokeMethod('getCreativeType', <String, dynamic>{'instanceID': this.hashCode});
     return creativeTypeFrom(value);
   }
 
   void setCreativeType(ANCreativeType creativeType) async {
     int value = creativeTypeToInt(creativeType);
-    await _channel.invokeMethod('setCreativeType', <String, dynamic>{
+    await channel.invokeMethod('setCreativeType', <String, dynamic>{
       'instanceID': this.hashCode,
       'newValue': value,
     });
   }
 
   Future<String> getSkipText() async {
-    return await _channel.invokeMethod('getSkipText', <String, dynamic>{'instanceID': this.hashCode});
+    return await channel.invokeMethod('getSkipText', <String, dynamic>{'instanceID': this.hashCode});
   }
 
   Future<void> setSkipText(String text) async {
-    await _channel.invokeMethod('setSkipText', <String, dynamic>{
+    await channel.invokeMethod('setSkipText', <String, dynamic>{
       'instanceID': this.hashCode,
       'newValue': text,
     });
   }
 
   Future<bool> getAutoPlay() async {
-    return await _channel.invokeMethod('getAutoPlay', <String, dynamic>{'instanceID': this.hashCode});
+    return await channel.invokeMethod('getAutoPlay', <String, dynamic>{'instanceID': this.hashCode});
   }
 
   Future<void> setAutoPlay(bool autoPlay) async {
-    await _channel.invokeMethod('setAutoPlay', <String, dynamic>{
+    await channel.invokeMethod('setAutoPlay', <String, dynamic>{
       'instanceID': this.hashCode,
       'newValue': autoPlay,
     });
@@ -72,16 +62,23 @@ class ANInterstitialAd extends ANAd {
 
   @override
   void onEvent(Object event) {
-    if (disposed) return;
-
+    print('interestitial onEvent');
+    if (disposed) {
+      print('disposed');
+      return;
+    }
     if (!(event is Map<dynamic, dynamic>)) {
+      print('wrong type');
       super.onEvent(event);
       return;
     }
 
     final map = event as Map<dynamic, dynamic>;
     // We handle events only relates to this instance.
-    if (map['instanceID'] != hashCode) return;
+    if (map['instanceID'] != hashCode) {
+      print('hash mismatch ${map['instanceID']} != $hashCode');
+      return;
+    }
 
     String cause = map['event'];
     switch (cause) {

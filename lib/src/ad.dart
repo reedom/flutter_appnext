@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/services.dart';
+import 'package:flutter_appnext/src/plugin.dart';
 import 'package:flutter_appnext/src/types.dart';
 
 class ANAdConfiguration {
@@ -19,17 +19,10 @@ class ANAdConfiguration {
   });
 }
 
-abstract class ANAd {
-  MethodChannel get channel;
-  EventChannel get eventChannel;
+abstract class ANAd extends ANAppnextPlugin {
   String get initMethod;
 
-  bool _disposed = false;
-  bool get disposed => _disposed;
-
   ANAd({String placementID, ANAdConfiguration adConfiguration}) {
-    eventChannel.receiveBroadcastStream().listen(onEvent, onError: onError);
-
     channel.invokeMethod(initMethod, <String, dynamic>{
       'instanceID': this.hashCode,
       'placementID': placementID,
@@ -40,13 +33,6 @@ abstract class ANAd {
           adConfiguration != null ? preferredOrientationToString(adConfiguration.preferredOrientation) : null,
       'clickInApp': adConfiguration != null ? adConfiguration.clickInApp : null,
     });
-  }
-
-  Future<void> dispose() async {
-    if (!_disposed) {
-      _disposed = true;
-      await channel.invokeMethod('dispose', <String, dynamic>{'instanceID': this.hashCode});
-    }
   }
 
   Future<String> get placementID async {
@@ -139,8 +125,4 @@ abstract class ANAd {
       'newValue': newValue,
     });
   }
-
-  void onEvent(Object event) {}
-
-  void onError(Object error) {}
 }

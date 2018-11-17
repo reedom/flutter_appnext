@@ -1,14 +1,15 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:streams_channel/streams_channel.dart';
 
 const MethodChannel _channel = const MethodChannel('com.reedom.flutter_appnext');
+final StreamsChannel _eventChannel = StreamsChannel('com.reedom.flutter_appnext/event');
 
 abstract class ANAppnextPlugin {
-  final StreamsChannel _eventChannel = StreamsChannel('com.reedom.flutter_appnext/event');
-
   bool _disposed = false;
+
   bool get disposed => _disposed;
 
   @override
@@ -18,25 +19,24 @@ abstract class ANAppnextPlugin {
   StreamsChannel get eventChannel => _eventChannel;
 
   ANAppnextPlugin() {
-    print('ANAppnextPlugin, instanceID = $hashCode, $this');
     final arg = <String, dynamic>{'instanceID': this.hashCode};
     eventChannel.receiveBroadcastStream(arg).listen(onEvent, onError: onError, onDone: onDone);
   }
 
   Future<void> dispose() async {
     if (!_disposed) {
-      _disposed = true;
       await channel.invokeMethod('dispose', <String, dynamic>{'instanceID': this.hashCode});
+      _disposed = true;
     }
   }
 
   void onEvent(Object event) {}
 
   void onError(Object error) {
-    print('receiveBroadcastStream.onError instanceID = $hashCode, error = $error}');
+    debugPrint('receiveBroadcastStream.onError instanceID = $hashCode, error = $error}');
   }
 
   void onDone() {
-    print('receiveBroadcastStream.onDone instanceID = $hashCode');
+    debugPrint('receiveBroadcastStream.onDone instanceID = $hashCode');
   }
 }

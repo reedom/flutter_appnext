@@ -1,14 +1,18 @@
 #import "FlutterAppnextPlugin.h"
 #import "FlutterAppnextBannerAd.h"
 #import "FlutterAppnextInterestitialAd.h"
+#import "FlutterStreamsChannel.h"
 
 #define _GET_INSTANCE_ID(arg) ([arg isKindOfClass:[NSDictionary class]] ? arg[@"instanceID"] : nil)
 
+@interface StreamsHandler : NSObject<FlutterStreamHandler>
+@end
+
 @implementation FlutterAppnextPlugin {
-  NSMutableDictionary* _instances;
-  NSMutableDictionary* _events;
+  NSMutableDictionary* _methodHandlers;
 }
 
+static NSMutableDictionary* streamsHandlers;
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel = [FlutterMethodChannel
@@ -17,14 +21,13 @@
   FlutterAppnextPlugin* instance = [[FlutterAppnextPlugin alloc] init];
   [registrar addMethodCallDelegate:instance channel:channel];
 
-  FlutterViewController* controller = (FlutterViewController*)UIApplication.sharedApplication.delegate.window.rootViewController;
+  streamsHandlers = [NSMutableDictionary new];
 
   FlutterStreamsChannel *eventChannel = [FlutterStreamsChannel
                                          streamsChannelWithName:@"com.reedom.flutter_appnext/event"
                                          binaryMessenger:registrar.messenger]; // controller
   [eventChannel setStreamHandlerFactory:^NSObject<FlutterStreamHandler> *(id arguments) {
-    NSLog(@"setStreamHandlerFactory");
-    return instance;
+    return [StreamsHandler new];
   }];
 }
 
@@ -32,8 +35,7 @@
   self = [super init];
   if (!self) return nil;
 
-  _instances = [NSMutableDictionary new];
-  _events = [NSMutableDictionary new];
+  _methodHandlers = [NSMutableDictionary new];
   return self;
 }
 
@@ -47,7 +49,7 @@
     return;
   }
 
-  FlutterAppnextBridge* instance = _instances[instanceID];
+  FlutterAppnextBridge* instance = _methodHandlers[instanceID];
   if (!instance) {
     if ([@"banner.init" isEqualToString:call.method]) {
       instance = [[FlutterAppnextBannerAd alloc] initWithPlugin:self instanceID:instanceID];
@@ -55,7 +57,7 @@
       instance = [[FlutterAppnextInterestitialAd alloc] initWithPlugin:self instanceID:instanceID];
     }
     if (instance) {
-      _instances[instanceID] = instance;
+      _methodHandlers[instanceID] = instance;
     }
   }
 
@@ -70,35 +72,12 @@
   if (instance) {
     [instance handleMethodCall:call result:result];
     if ([@"dispose" isEqualToString:call.method]) {
-      [_instances removeObjectForKey:instanceID];
+      [self close:instanceID];
     }
     return;
   }
 
   result(FlutterMethodNotImplemented);
-}
-
-#pragma mark FlutterStreamHandler
-
-- (FlutterError*)onListenWithArguments:(id)arguments
-                             eventSink:(FlutterEventSink)eventSink {
-  NSNumber* instanceID = _GET_INSTANCE_ID(arguments);
-  if (!instanceID) {
-    return [FlutterError errorWithCode:@"INVALIDARG"
-                               message:@"instanceID is not specified"
-                               details:nil];
-  }
-  _events[instanceID] = eventSink;
-  return nil;
-}
-
-- (FlutterError* _Nullable)onCancelWithArguments:(id _Nullable)arguments {
-  NSLog(@"onCancelWithArguments");
-  // _eventSink should not be set nil since cancelling occurs
-  // whenever any Dart class instance which is listening to this
-  // eventChannel has been destroyed.
-  // _eventSink = nil;
-  return nil;
 }
 
 - (void)invokeEvent:(id)arguments {
@@ -108,12 +87,54 @@
     return;
   }
   
-  FlutterEventSink eventSink = _events[instanceID];
+  FlutterEventSink eventSink = streamsHandlers[instanceID];
   if (!eventSink) {
     NSLog(@"event sink is not found");
     return;
   }
-  eventSink(arguments);
+  if (arguments[@"event"] == FlutterEndOfEventStream) {
+    eventSink(FlutterEndOfEventStream);
+  } else {
+    eventSink(arguments);
+  }
+}
+
+- (void)close:(NSNumber*)instanceID {
+  FlutterEventSink eventSink = streamsHandlers[instanceID];
+  if (!eventSink) {
+    NSLog(@"event sink is not found");
+    return;
+  }
+  eventSink(FlutterEndOfEventStream);
+  [streamsHandlers removeObjectForKey:instanceID];
+  [_methodHandlers removeObjectForKey:instanceID];
+}
+
+@end
+
+#pragma mark FlutterStreamHandler
+
+@implementation StreamsHandler
+
+- (void)dealloc {
+  NSLog(@"dealloc");
+}
+
+- (FlutterError*)onListenWithArguments:(id)arguments
+                             eventSink:(FlutterEventSink)eventSink {
+  NSNumber* instanceID = _GET_INSTANCE_ID(arguments);
+  if (!instanceID) {
+    return [FlutterError errorWithCode:@"INVALIDARG"
+                               message:@"instanceID is not specified"
+                               details:nil];
+  }
+  streamsHandlers[instanceID] = eventSink;
+  return nil;
+}
+
+- (FlutterError* _Nullable)onCancelWithArguments:(id _Nullable)arguments {
+  NSLog(@"onCancelWithArguments %@", arguments);
+  return nil;
 }
 
 @end

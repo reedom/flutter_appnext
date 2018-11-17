@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 enum ANPreferredOrientation {
   Automatic, // 0
   Landscape, // 1
@@ -19,7 +21,7 @@ ANPreferredOrientation preferredOrientationFrom(String value) {
       if (value == null) {
         return null;
       }
-      print('received unknown value for ANPreferredOrientation ($value)');
+      debugPrint('received unknown value for ANPreferredOrientation ($value)');
       return ANPreferredOrientation.NotSet;
   }
 }
@@ -38,7 +40,7 @@ String preferredOrientationToString(ANPreferredOrientation value) {
       if (value == null) {
         return null;
       }
-      print('unknown type ANPreferredOrientation.${value.index}');
+      debugPrint('unknown type ANPreferredOrientation.${value.index}');
       return 'not_set';
   }
 }
@@ -64,7 +66,7 @@ ANCreativeType creativeTypeFrom(int value) {
       if (value == null) {
         return null;
       }
-      print('received unknown value for ANCreativeType ($value)');
+      debugPrint('received unknown value for ANCreativeType ($value)');
       return ANCreativeType.NotSet;
   }
 }
@@ -81,7 +83,7 @@ int creativeTypeToInt(ANCreativeType value) {
       if (value == null) {
         return null;
       }
-      print('unknown type for ANCreativeType.${value.index}');
+      debugPrint('unknown type for ANCreativeType.${value.index}');
       return ANCreativeType.NotSet.index;
   }
 }
@@ -104,7 +106,7 @@ ANCreative creativeFrom(int value) {
       if (value == null) {
         return null;
       }
-      print('received unknown value for ANCreative ($value)');
+      debugPrint('received unknown value for ANCreative ($value)');
       return ANCreative.All;
   }
 }
@@ -119,7 +121,7 @@ int creativeToInt(ANCreative value) {
       if (value == null) {
         return null;
       }
-      print('unknown type for ANCreative.${value.index}');
+      debugPrint('unknown type for ANCreative.${value.index}');
       return ANCreative.All.index;
   }
 }
@@ -142,7 +144,7 @@ ANVideoLength videoLengthFrom(int value) {
       if (value == null) {
         return null;
       }
-      print('received unknown value for ANVideoLength ($value)');
+      debugPrint('received unknown value for ANVideoLength ($value)');
       return ANVideoLength.Auto;
   }
 }
@@ -157,7 +159,7 @@ int videoLengthToInt(ANVideoLength value) {
       if (value == null) {
         return null;
       }
-      print('unknown type for ANVideoLength.${value.index}');
+      debugPrint('unknown type for ANVideoLength.${value.index}');
       return ANVideoLength.Auto.index;
   }
 }
@@ -180,7 +182,7 @@ ANBannerType bannerTypeFrom(int value) {
       if (value == null) {
         return null;
       }
-      print('received unknown value for ANBannerType ($value)');
+      debugPrint('received unknown value for ANBannerType ($value)');
       return ANBannerType.Small;
   }
 }
@@ -195,7 +197,7 @@ int bannerTypeToInt(ANBannerType value) {
       if (value == null) {
         return null;
       }
-      print('unknown type for ANBannerType.${value.index}');
+      debugPrint('unknown type for ANBannerType.${value.index}');
       return ANBannerType.Small.index;
   }
 }

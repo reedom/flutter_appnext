@@ -1,6 +1,5 @@
 #import <Flutter/Flutter.h>
-#import "FlutterStreamsChannel.h"
 
-@interface FlutterAppnextPlugin : NSObject<FlutterPlugin, FlutterStreamHandler>
+@interface FlutterAppnextPlugin : NSObject<FlutterPlugin>
 - (void)invokeEvent:(id)arguments;
 @end

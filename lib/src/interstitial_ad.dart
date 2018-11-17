@@ -62,13 +62,12 @@ class ANInterstitialAd extends ANAd {
 
   @override
   void onEvent(Object event) {
-    print('interestitial onEvent');
     if (disposed) {
-      print('disposed');
+      debugPrint('disposed');
       return;
     }
     if (!(event is Map<dynamic, dynamic>)) {
-      print('wrong type');
+      debugPrint('wrong type');
       super.onEvent(event);
       return;
     }
@@ -76,7 +75,7 @@ class ANInterstitialAd extends ANAd {
     final map = event as Map<dynamic, dynamic>;
     // We handle events only relates to this instance.
     if (map['instanceID'] != hashCode) {
-      print('hash mismatch ${map['instanceID']} != $hashCode');
+      debugPrint('hash mismatch ${map['instanceID']} != $hashCode');
       return;
     }
 

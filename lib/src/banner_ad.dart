@@ -31,7 +31,6 @@ class ANBannerAd extends ANAppnextPlugin {
     this.adClicked,
     this.adError,
   }) {
-    print('hash: $hashCode');
     channel.invokeMethod('banner.init', <String, dynamic>{
       'instanceID': hashCode,
       'placementID': placementID,
@@ -50,7 +49,6 @@ class ANBannerAd extends ANAppnextPlugin {
   }
 
   Future<void> loadAd() async {
-    print('hash: $hashCode');
     await channel.invokeMethod('loadAd', <String, dynamic>{'instanceID': hashCode});
   }
 
@@ -64,13 +62,13 @@ class ANBannerAd extends ANAppnextPlugin {
 
   @override
   void onEvent(Object event) {
-    print('banner.onEvent');
+    debugPrint('banner.onEvent "$event"');
     if (disposed) {
-      print('disposed');
+      debugPrint('already disposed');
       return;
     }
     if (!(event is Map<dynamic, dynamic>)) {
-      print('wrong type');
+      debugPrint('wrong type');
       super.onEvent(event);
       return;
     }
@@ -78,7 +76,7 @@ class ANBannerAd extends ANAppnextPlugin {
     final map = event as Map<dynamic, dynamic>;
     // We handle events only relates to this instance.
     if (map['instanceID'] != hashCode) {
-      print('hash mismatch ${map['instanceID']} != $hashCode');
+      debugPrint('hash mismatch ${map['instanceID']} != $hashCode');
       return;
     }
 

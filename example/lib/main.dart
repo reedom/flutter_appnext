@@ -15,6 +15,9 @@ class _MyAppState extends State<MyApp> {
   ANBannerAd _bannerAd;
   ANInterstitialAd _interstitialAd;
   String _log = '';
+  double _bannerOffsetX = 0.0;
+  double _bannerOffsetY = 0.0;
+  ANAnchorPosition _bannerPos = ANAnchorPosition.bottom;
 
   @override
   void initState() {
@@ -67,6 +70,45 @@ class _MyAppState extends State<MyApp> {
                           child: Text('Rectangle Banner')),
                       RaisedButton(onPressed: () => _setBannerProps(), child: Text('Set Banner props')),
                       RaisedButton(onPressed: () => _bannerAd.dispose(), child: Text('Dispose Banner')),
+                      Slider(
+                          onChanged: (v) {
+                            _bannerOffsetX = v;
+                            setState(() {
+                              _bannerAd.setAnchorOffset(Offset(_bannerOffsetX, _bannerOffsetY));
+                            });
+                          },
+                          value: _bannerOffsetX,
+                          min: -500.0,
+                          max: 500.0),
+                      Slider(
+                          onChanged: (v) {
+                            _bannerOffsetY = v;
+                            setState(() {
+                              _bannerAd.setAnchorOffset(Offset(_bannerOffsetX, _bannerOffsetY));
+                            });
+                          },
+                          value: _bannerOffsetY,
+                          min: -500.0,
+                          max: 500.0),
+                      PopupMenuButton<ANAnchorPosition>(
+                        initialValue: _bannerPos,
+                        onSelected: (v) {
+                          _bannerAd.setAnchorPosition(v);
+                          setState(() => _bannerPos = v);
+                        },
+                        itemBuilder: (_) => [
+                              const PopupMenuItem(value: ANAnchorPosition.none, child: Text('none')),
+                              const PopupMenuItem(value: ANAnchorPosition.bottomRight, child: Text('bottomRight')),
+                              const PopupMenuItem(value: ANAnchorPosition.bottomLeft, child: Text('bottomLeft')),
+                              const PopupMenuItem(value: ANAnchorPosition.bottom, child: Text('bottom')),
+                              const PopupMenuItem(value: ANAnchorPosition.topRight, child: Text('topRight')),
+                              const PopupMenuItem(value: ANAnchorPosition.topLeft, child: Text('topLeft')),
+                              const PopupMenuItem(value: ANAnchorPosition.top, child: Text('top')),
+                              const PopupMenuItem(value: ANAnchorPosition.right, child: Text('right')),
+                              const PopupMenuItem(value: ANAnchorPosition.left, child: Text('left')),
+                              const PopupMenuItem(value: ANAnchorPosition.center, child: Text('center')),
+                            ],
+                      )
                     ]),
                   ),
                   Expanded(
@@ -76,15 +118,19 @@ class _MyAppState extends State<MyApp> {
                       RaisedButton(onPressed: () => _interstitialAd.showAd(), child: Text('Show Interstitial')),
                       RaisedButton(onPressed: () => _setInterstitialProps(), child: Text('Set Interstitial props')),
                       RaisedButton(onPressed: () => _interstitialAd.dispose(), child: Text('Dispose Interstitial')),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              _log,
+                              maxLines: null,
+                            ),
+                          ),
+                        ],
+                      ),
                     ]),
                   ),
                 ],
-              ),
-              Expanded(
-                child: Text(
-                  _log,
-                  maxLines: null,
-                ),
               ),
             ],
           ),
@@ -142,6 +188,8 @@ class _MyAppState extends State<MyApp> {
     _bannerAd = ANBannerAd(
       placementID: placementID,
       bannerType: bannerType,
+      anchorOffset: Offset(_bannerOffsetX, _bannerOffsetY),
+      anchorPosition: _bannerPos,
       adLoaded: (_) => log('banner loaded'),
       adOpened: (_) => log('banner opened'),
       adClicked: (_) => log('banner clicked'),

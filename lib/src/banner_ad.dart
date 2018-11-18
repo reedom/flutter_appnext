@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_appnext/src/plugin.dart';
@@ -30,6 +31,8 @@ class ANBannerAd extends ANAppnextPlugin {
     this.adImpressionReported,
     this.adClicked,
     this.adError,
+    ANAnchorPosition anchorPosition = ANAnchorPosition.bottom,
+    Offset anchorOffset,
   }) {
     final arg = <String, dynamic>{
       'instanceID': hashCode,
@@ -45,6 +48,11 @@ class ANBannerAd extends ANAppnextPlugin {
       'minVideoLength': minVideoLength,
       'clickInApp': clickInApp,
       'bannerType': bannerTypeToInt(bannerType),
+      'anchorPosition': anchorPositionToInt(anchorPosition),
+      'anchorOffset': <String, double>{
+        'x': anchorOffset != null ? anchorOffset.dx : 0.0,
+        'y': anchorOffset != null ? anchorOffset.dy : 0.0,
+      },
     };
     channel.invokeMethod('banner.init', arg);
     eventChannel.receiveBroadcastStream(arg).listen(onEvent, onError: onError, onDone: onDone);
@@ -99,6 +107,31 @@ class ANBannerAd extends ANAppnextPlugin {
     }
 
     super.onEvent(event);
+  }
+
+  Future<ANAnchorPosition> getAnchorPosition() async {
+    final value = await channel.invokeMethod('getAnchorPosition', <String, dynamic>{'instanceID': this.hashCode});
+    return anchorPositionFrom(value);
+  }
+
+  Future<void> setAnchorPosition(ANAnchorPosition newValue) async {
+    await channel.invokeMethod('setAnchorPosition', <String, dynamic>{
+      'instanceID': this.hashCode,
+      'newValue': anchorPositionToInt(newValue),
+    });
+  }
+
+  Future<Offset> getAnchorOffset() async {
+    final Map<String, dynamic> value =
+        await channel.invokeMethod('getAnchorOffset', <String, dynamic>{'instanceID': this.hashCode});
+    return Offset(value['x'], value['y']);
+  }
+
+  Future<void> setAnchorOffset(Offset newValue) async {
+    await channel.invokeMethod('setAnchorOffset', <String, dynamic>{
+      'instanceID': this.hashCode,
+      'newValue': <String, dynamic>{'x': newValue.dx, 'y': newValue.dy},
+    });
   }
 }
 

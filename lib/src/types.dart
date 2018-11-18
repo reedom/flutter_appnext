@@ -201,3 +201,100 @@ int bannerTypeToInt(ANBannerType value) {
       return ANBannerType.Small.index;
   }
 }
+
+enum ANAnchorPosition {
+  none, // 0
+  bottomRight, // 1
+  bottomLeft, // 2
+  bottom, // 3
+  topRight, // 4
+  topLeft, // 5
+  top, // 6
+  right, // 7
+  left, // 8
+  center, // 9
+}
+
+ANAnchorPosition anchorPositionFrom(int value) {
+  switch (value) {
+    case 0:
+      return ANAnchorPosition.none;
+    case 1:
+      return ANAnchorPosition.bottomRight;
+    case 2:
+      return ANAnchorPosition.bottomLeft;
+    case 3:
+      return ANAnchorPosition.bottom;
+    case 4:
+      return ANAnchorPosition.topRight;
+    case 5:
+      return ANAnchorPosition.topLeft;
+    case 6:
+      return ANAnchorPosition.top;
+    case 7:
+      return ANAnchorPosition.right;
+    case 8:
+      return ANAnchorPosition.left;
+    case 9:
+      return ANAnchorPosition.center;
+    default:
+      if (value == null) {
+        return null;
+      }
+      debugPrint('received unknown value for ANAnchorPosition ($value)');
+      return ANAnchorPosition.none;
+  }
+}
+
+int anchorPositionToInt(ANAnchorPosition value) {
+  switch (value) {
+    case ANAnchorPosition.none:
+    case ANAnchorPosition.bottomRight:
+    case ANAnchorPosition.bottomLeft:
+    case ANAnchorPosition.bottom:
+    case ANAnchorPosition.topRight:
+    case ANAnchorPosition.topLeft:
+    case ANAnchorPosition.top:
+    case ANAnchorPosition.right:
+    case ANAnchorPosition.left:
+    case ANAnchorPosition.center:
+      return value.index;
+    default:
+      if (value == null) {
+        return null;
+      }
+      debugPrint('unknown type for ANAnchorPosition.${value.index}');
+      return ANAnchorPosition.none.index;
+  }
+}
+
+String anchorPositionToString(ANAnchorPosition value) {
+  switch (value) {
+    case ANAnchorPosition.none:
+      return 'none';
+    case ANAnchorPosition.bottomRight:
+      return 'bottomRight';
+    case ANAnchorPosition.bottomLeft:
+      return 'bottomLeft';
+    case ANAnchorPosition.bottom:
+      return 'bottom';
+    case ANAnchorPosition.topRight:
+      return 'topRight';
+    case ANAnchorPosition.topLeft:
+      return 'topLeft';
+    case ANAnchorPosition.top:
+      return 'top';
+    case ANAnchorPosition.right:
+      return 'right';
+    case ANAnchorPosition.left:
+      return 'left';
+    case ANAnchorPosition.center:
+      return 'center';
+    default:
+      if (value == null) {
+        return null;
+      }
+      debugPrint('unknown type for ANAnchorPosition.${value.index}');
+      return 'none';
+  }
+}

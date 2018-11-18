@@ -83,10 +83,6 @@ static NSMutableDictionary* _methodHandlers;
 
 @implementation StreamsHandler
 
-- (void)dealloc {
-  NSLog(@"dealloc");
-}
-
 - (FlutterError*)onListenWithArguments:(id)arguments
                              eventSink:(FlutterEventSink)eventSink {
   NSNumber* instanceID = _GET_INSTANCE_ID(arguments);
@@ -108,7 +104,6 @@ static NSMutableDictionary* _methodHandlers;
 }
 
 - (FlutterError* _Nullable)onCancelWithArguments:(id _Nullable)arguments {
-  NSLog(@"onCancelWithArguments %@", arguments);
   NSNumber* instanceID = _GET_INSTANCE_ID(arguments);
   if (instanceID) {
     [_methodHandlers removeObjectForKey:instanceID];

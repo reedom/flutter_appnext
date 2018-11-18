@@ -1,10 +1,6 @@
-# flutter_appnext
+Appnext for Flutter
+===================
 
-Flutter Appnext support
+An Appnext plugin for Flutter. Currently supports banner and interstitial ads in iOS.
 
-## Getting Started
-
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
-
-For help on editing plugin code, view the [documentation](https://flutter.io/developing-packages/#edit-plugin-package).
+…Under development.

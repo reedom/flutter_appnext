@@ -6,7 +6,7 @@ import 'package:flutter_appnext/src/types.dart';
 
 class ANInterstitialAd extends ANAd {
   @override
-  String get initMethod => 'interestitial.init';
+  String get initMethod => 'interstitial.init';
 
   ValueChanged<ANInterstitialAd> adLoaded;
   ValueChanged<ANInterstitialAd> adOpened;

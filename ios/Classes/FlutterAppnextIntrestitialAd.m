@@ -1,12 +1,12 @@
 #import "FlutterAppnextPlugin.h"
-#import "FlutterAppnextInterestitialAd.h"
+#import "FlutterAppnextInterstitialAd.h"
 
-@implementation FlutterAppnextInterestitialAd {
+@implementation FlutterAppnextInterstitialAd {
   AppnextInterstitialAd *_interstitial;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-  if ([@"interestitial.init" isEqualToString:call.method]) {
+  if ([@"Interstitial.init" isEqualToString:call.method]) {
     return [self initInstance:call result:result];
   } else if ([@"getCreativeType" isEqualToString:call.method]) {
     ANCreativeType value = [_interstitial getCreativeType];

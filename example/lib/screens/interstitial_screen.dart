@@ -29,7 +29,7 @@ class _InterstitialAdScreenState extends State<InterstitialAdScreen> {
       adOpened: (_) => log('adOpened'),
       adClicked: (_) => log('adClicked'),
       adUserWillLeaveApplication: (_) => log('adUserWillLeaveApplication'),
-      adError: (err) => showInSnackBar('interestitial error: ${err.error}'),
+      adError: (_, error) => showInSnackBar('interestitial error: $error'),
     );
   }
 

@@ -32,7 +32,7 @@ class _BannerAdScreenState extends State<BannerAdScreen> {
       adOpened: (_) => log('adOpened'),
       adClicked: (_) => log('adClicked'),
       adImpressionReported: (_) => log('adImpressionReported'),
-      adError: (err) => showInSnackBar('banner error: ${err.error}'),
+      adError: (_, error) => showInSnackBar('banner error: $error'),
     );
   }
 
@@ -104,7 +104,7 @@ class _BannerAdScreenState extends State<BannerAdScreen> {
       adOpened: (_) => log('banner opened'),
       adClicked: (_) => log('banner clicked'),
       adImpressionReported: (_) => log('banner adImpressionReported'),
-      adError: (err) => showInSnackBar('banner error: ${err.error}'),
+      adError: (_, error) => showInSnackBar('banner error: $error'),
     );
   }
 

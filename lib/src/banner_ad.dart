@@ -7,11 +7,11 @@ import 'package:flutter_appnext/src/types.dart';
 import 'package:meta/meta.dart';
 
 class ANBannerAd extends ANAppnextPlugin {
-  ValueChanged<ANBannerAd> adLoaded;
-  ValueChanged<ANBannerAd> adOpened;
-  ValueChanged<ANBannerAd> adImpressionReported;
-  ValueChanged<ANBannerAd> adClicked;
-  ValueChanged<ANBannerAdError> adError;
+  void Function(ANBannerAd instance) adLoaded;
+  void Function(ANBannerAd instance) adOpened;
+  void Function(ANBannerAd instance) adImpressionReported;
+  void Function(ANBannerAd instance) adClicked;
+  void Function(ANBannerAd instance, String error) adError;
 
   ANBannerAd({
     @required String placementID,
@@ -96,7 +96,7 @@ class ANBannerAd extends ANAppnextPlugin {
         if (adLoaded != null) adLoaded(this);
         return;
       case 'onAppnextBannerError':
-        if (adError != null) adError(ANBannerAdError(this, map['error']));
+        if (adError != null) adError(this, map['error']);
         return;
       case 'onAppnextBannerClicked':
         if (adClicked != null) adClicked(this);
@@ -132,17 +132,5 @@ class ANBannerAd extends ANAppnextPlugin {
       'instanceID': this.hashCode,
       'newValue': <String, dynamic>{'x': newValue.dx, 'y': newValue.dy},
     });
-  }
-}
-
-class ANBannerAdError {
-  final ANBannerAd bannerAd;
-  final String error;
-
-  ANBannerAdError(this.bannerAd, this.error);
-
-  @override
-  String toString() {
-    return 'ANBannerAdError: $error';
   }
 }

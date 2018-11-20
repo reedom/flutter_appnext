@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 
+typedef ANVoidEvent<T> = void Function(T instance);
+typedef ANValueEvent<T, U> = void Function(T instance, U value);
+
 enum ANPreferredOrientation {
   Automatic, // 0
   Landscape, // 1
@@ -296,5 +299,51 @@ String anchorPositionToString(ANAnchorPosition value) {
       }
       debugPrint('unknown type for ANAnchorPosition.${value.index}');
       return 'none';
+  }
+}
+
+class ANAdData {
+  String buttonText;
+  String title;
+  String desc;
+  String urlImg;
+  String urlImgWide;
+  String categories;
+  String idx;
+  String iosPackage;
+  String supportedDevices;
+  String urlVideo;
+  String urlVideoHigh;
+  String urlVideo30Sec;
+  String urlVideo30SecHigh;
+  String bannerID;
+  String campaignID;
+  String country;
+  String campaignType;
+  String supportedVersion;
+  String storeRating;
+  String appSize;
+
+  ANAdData.fromMap(Map<dynamic, dynamic> adData) {
+    buttonText = adData['buttonText'];
+    title = adData['title'];
+    desc = adData['desc'];
+    urlImg = adData['urlImg'];
+    urlImgWide = adData['urlImgWide'];
+    categories = adData['categories'];
+    idx = adData['idx'];
+    iosPackage = adData['iosPackage'];
+    supportedDevices = adData['supportedDevices'];
+    urlVideo = adData['urlVideo'];
+    urlVideoHigh = adData['urlVideoHigh'];
+    urlVideo30Sec = adData['urlVideo30Sec'];
+    urlVideo30SecHigh = adData['urlVideo30SecHigh'];
+    bannerID = adData['bannerID'];
+    campaignID = adData['campaignID'];
+    country = adData['country'];
+    campaignType = adData['campaignType'];
+    supportedVersion = adData['supportedVersion'];
+    storeRating = adData['storeRating'];
+    appSize = adData['appSize'];
   }
 }

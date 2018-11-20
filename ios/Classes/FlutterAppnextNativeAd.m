@@ -54,8 +54,8 @@
 }
 
 - (AppnextAdData*)adDataFrom:(FlutterMethodCall*)call {
-  AppnextAdData* ret = _adData[bannerId];
-  return ret;
+  NSString* bannerId = call.arguments[@"bannerID"];
+  return _adData[bannerId];
 }
 
 + (NSDictionary*)adDataToDict:(AppnextAdData*)adData {

@@ -6,14 +6,14 @@ import 'package:flutter_appnext/src/types.dart';
 
 class ANInterstitialAd extends ANAd {
   @override
-  String get initMethod => 'interestitial.init';
+  String get initMethod => 'interstitial.init';
 
-  ValueChanged<ANInterstitialAd> adLoaded;
-  ValueChanged<ANInterstitialAd> adOpened;
-  ValueChanged<ANInterstitialAd> adClosed;
-  ValueChanged<ANInterstitialAd> adClicked;
-  ValueChanged<ANInterstitialAd> adUserWillLeaveApplication;
-  ValueChanged<ANInterstitialAdError> adError;
+  void Function(ANInterstitialAd instance) adLoaded;
+  void Function(ANInterstitialAd instance) adOpened;
+  void Function(ANInterstitialAd instance) adClosed;
+  void Function(ANInterstitialAd instance) adClicked;
+  void Function(ANInterstitialAd instance) adUserWillLeaveApplication;
+  void Function(ANInterstitialAd instance, String error) adError;
 
   ANInterstitialAd({
     String placementID,
@@ -97,7 +97,7 @@ class ANInterstitialAd extends ANAd {
         if (adUserWillLeaveApplication != null) adUserWillLeaveApplication(this);
         return;
       case 'adError':
-        if (adError != null) adError(ANInterstitialAdError(this, map['error']));
+        if (adError != null) adError(this, map['error']);
         return;
     }
 
@@ -107,17 +107,5 @@ class ANInterstitialAd extends ANAd {
   @override
   void onError(Object error) {
     super.onError(error);
-  }
-}
-
-class ANInterstitialAdError {
-  final ANInterstitialAd interstitialAd;
-  final String error;
-
-  ANInterstitialAdError(this.interstitialAd, this.error);
-
-  @override
-  String toString() {
-    return 'AppnextInterstitialAdError: $error';
   }
 }

@@ -1,6 +1,7 @@
 #import "FlutterAppnextPlugin.h"
 #import "FlutterAppnextBannerAd.h"
-#import "FlutterAppnextInterestitialAd.h"
+#import "FlutterAppnextInterstitialAd.h"
+#import "FlutterAppnextNativeAd.h"
 #import "FlutterStreamsChannel.h"
 
 #define _GET_INSTANCE_ID(arg) ([arg isKindOfClass:[NSDictionary class]] ? arg[@"instanceID"] : nil)
@@ -50,8 +51,10 @@ static NSMutableDictionary* _methodHandlers;
   if (!instance) {
     if ([@"banner.init" isEqualToString:call.method]) {
       instance = [[FlutterAppnextBannerAd alloc] initWithInstanceID:instanceID];
-    } else if ([@"interestitial.init" isEqualToString:call.method]) {
-      instance = [[FlutterAppnextInterestitialAd alloc] initWithInstanceID:instanceID];
+    } else if ([@"interstitial.init" isEqualToString:call.method]) {
+      instance = [[FlutterAppnextInterstitialAd alloc] initWithInstanceID:instanceID];
+    } else if ([@"native.init" isEqualToString:call.method]) {
+      instance = [[FlutterAppnextNativeAd alloc] initWithInstanceID:instanceID];
     }
     if (instance) {
       _methodHandlers[instanceID] = instance;

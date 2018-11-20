@@ -4,6 +4,6 @@
 
 @class FlutterAppnextPlugin;
 
-@interface FlutterAppnextInterestitialAd : FlutterAppnextAd
+@interface FlutterAppnextInterstitialAd : FlutterAppnextAd
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result;
 @end
